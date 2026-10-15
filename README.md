@@ -1,6 +1,6 @@
-# Plataforma web · Detección y georreferenciación de baches con VANT (CDMX)
+# Plataforma web de Detección y georreferenciación de baches con VANT
 
-Proyecto Terminal, Ingeniería en Telemática, UPIITA-IPN.
+Proyecto Terminal de Ingeniería en Telemática, UPIITA-IPN.
 
 ## Estado actual (Fase 2: base ejecutable)
 
@@ -17,7 +17,7 @@ Proyecto Terminal, Ingeniería en Telemática, UPIITA-IPN.
 
 Las rutas del frontend **no están protegidas todavía** porque no existe autenticación.
 
-## Ejecutar con Docker (solo desarrollo)
+## Ejecutar con Docker (solo dev)
 
 ```bash
 cp infra/.env.example infra/.env     # edita las contraseñas
