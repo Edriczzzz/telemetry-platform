@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "event_id": "9e7d4b10-2c5f-4d3a-8f41-6a1b0c9d2e77",
+      "mission_id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "detected_at": "2026-10-15T20:15:09Z",
+      "latitude": 19.5049,
+      "longitude": -99.1468,
+      "severity": "media",
+      "area_value": 0.42,
+      "area_unit": "m2",
+      "confidence": 0.87,
+      "gnss_accuracy_m": 2.5,
+      "frame_id": "IMG_0153.JPG",
+      "extra": {},
+      "data_origin": "simulated"
+    }
+  ]
+}

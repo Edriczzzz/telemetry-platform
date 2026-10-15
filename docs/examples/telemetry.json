@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "event_id": "3f1c8a52-6a0e-4c1e-9d55-0b6f7e2a9c11",
+      "mission_id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "recorded_at": "2026-10-15T20:15:03Z",
+      "latitude": 19.5047,
+      "longitude": -99.1470,
+      "altitude_m": 15.2,
+      "speed_ms": 4.1,
+      "battery_pct": 78,
+      "vehicle_state": "AUTO",
+      "extra": {},
+      "data_origin": "simulated"
+    }
+  ]
+}

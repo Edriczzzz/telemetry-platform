@@ -1,0 +1,20 @@
+{
+  "type": "detection.created",
+  "version": 1,
+  "event_id": "5b0a1e66-7d2c-4f0b-a3d9-1c2e3f4a5b6c",
+  "occurred_at": "2026-10-15T20:15:09Z",
+  "server_time": "2026-10-15T20:15:10Z",
+  "mission_id": "a1b2c3d4-0000-4000-8000-000000000001",
+  "data_origin": "simulated",
+  "data": {
+    "id": "c0ffee00-1111-4222-8333-444455556666",
+    "latitude": 19.5049,
+    "longitude": -99.1468,
+    "severity": "media",
+    "area_value": 0.42,
+    "area_unit": "m2",
+    "confidence": 0.87,
+    "attention_status": "pendiente",
+    "validation_status": "sin_revisar"
+  }
+}

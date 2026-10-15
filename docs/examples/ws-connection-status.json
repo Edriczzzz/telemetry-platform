@@ -1,0 +1,10 @@
+{
+  "type": "connection.status_changed",
+  "version": 1,
+  "event_id": "7a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d",
+  "occurred_at": "2026-10-15T20:16:00Z",
+  "server_time": "2026-10-15T20:16:00Z",
+  "mission_id": "a1b2c3d4-0000-4000-8000-000000000001",
+  "data_origin": "real",
+  "data": { "component": "uav_link", "state": "degraded", "detail": "Sin telemetría en 12 s" }
+}

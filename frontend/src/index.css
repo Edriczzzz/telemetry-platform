@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "@fontsource/atkinson-hyperlegible/400.css";
+@import "@fontsource/atkinson-hyperlegible/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-ink: #14262e;          /* barra lateral */
+  --color-ink-soft: #1f3944;
+  --color-paper: #f2f4f1;        /* fondo, como papel de mapa */
+  --color-asphalt: #3a4248;      /* texto principal */
+  --color-line: #d5dbd6;
+  --color-survey: #1f6fb2;       /* acciones primarias */
+  --color-sev-low: #d8a31a;      /* severidad: solo para baches */
+  --color-sev-mid: #e4701e;
+  --color-sev-high: #c23b30;
+  --color-demo: #5b3e96;
+  --color-demo-bg: #efe9f8;
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--color-paper); color: var(--color-asphalt); font-family: var(--font-sans); }
+
+:focus-visible { outline: 3px solid var(--color-survey); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

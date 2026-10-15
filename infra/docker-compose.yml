@@ -1,0 +1,54 @@
+# SOLO DESARROLLO LOCAL. No usar tal cual en producción.
+name: vant-platform
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vant}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?define POSTGRES_PASSWORD en infra/.env}
+      POSTGRES_DB: ${POSTGRES_DB:-vant}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"   # solo accesible desde tu máquina
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vant} -d ${POSTGRES_DB:-vant}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../backend
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-vant}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-vant}
+      CORS_ORIGINS: http://localhost:5173
+      JWT_SECRET: ${JWT_SECRET:?define JWT_SECRET en infra/.env}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ../backend:/srv
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build: ../frontend
+    environment:
+      VITE_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+
+volumes:
+  dbdata:
