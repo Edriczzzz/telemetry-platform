@@ -1,11 +1,13 @@
 # Arquitectura
 
 ```
+Así esta en mi cabeza el flujo de operacion:
+
 VANT (IA a bordo) --915 MHz--> Estación base --HTTPS (API key)--> Backend FastAPI --> PostgreSQL/PostGIS
                                                                        |                    ^
                                                                   WebSocket              archivos (MinIO, Fase 6)
                                                                        v
-                                                         Web React/Leaflet · App móvil (futura)
+                                                         Web React/Leaflet · App móvil (futuro)
 Post-vuelo: fotos (manual) --> fotogrametría local --> ortomosaico --> carga a la plataforma
 ```
 
