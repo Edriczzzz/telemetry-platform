@@ -22,7 +22,7 @@ export function Layout() {
       <aside className="flex shrink-0 flex-col bg-ink text-[#d7e3e0] md:w-60">
         <div className="px-4 py-3 text-lg font-bold leading-tight">
           Inspección vial
-          <span className="block text-sm font-normal opacity-75">VANT</span>
+          <span className="block text-sm font-normal opacity-75">CDMX · VANT</span>
         </div>
         <nav aria-label="Principal" className="flex overflow-x-auto md:flex-col md:overflow-visible">
           {NAV.map((item) => (

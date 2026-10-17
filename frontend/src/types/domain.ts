@@ -11,13 +11,47 @@ export interface Mission {
   id: string;
   name: string;
   description: string;
+  zone: string;
   status: MissionStatus;
-  area: LatLng[]; // anillo del polígono de inspección
+  planned_altitude_m: number | null;
+  area: LatLng[]; // anillo del polígono de inspección (puede estar vacío en un borrador)
+  waypoints: LatLng[]; // ruta planificada: solo se registra, no se envía al VANT
   created_at: string;
   started_at: string | null;
   ended_at: string | null;
   detections_count: number;
+  severity_counts: Record<Severity, number>;
+  attended_count: number;
   data_origin: DataOrigin;
+}
+
+export interface MissionEvent {
+  id: number;
+  at: string;
+  text: string;
+  user_name: string | null;
+}
+
+export interface TelemetryPoint {
+  recorded_at: string;
+  latitude: number;
+  longitude: number;
+  altitude_m: number | null;
+  speed_ms: number | null;
+  battery_pct: number | null;
+  vehicle_state: string | null;
+  data_origin: DataOrigin;
+}
+
+/** Campos que una persona puede crear o editar. Los estados de vuelo los reporta la estación base. */
+export interface MissionInput {
+  name: string;
+  description: string;
+  zone: string;
+  status: "borrador" | "planificada" | "cancelada";
+  planned_altitude_m: number | null;
+  area: LatLng[];
+  waypoints: LatLng[];
 }
 
 export interface Detection {

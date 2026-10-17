@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Polyline, Popup, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Polyline, Popup, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import type { CircleMarker as LCircleMarker, LatLngBoundsExpression, Map as LMap } from "leaflet";
 import { Link } from "react-router-dom";
 import { fmtArea, fmtCoord, fmtDateTime, SEVERITY_COLOR, SEVERITY_LABEL, ATTENTION_LABEL, VALIDATION_LABEL } from "../lib/labels";
@@ -11,6 +11,8 @@ interface Props {
   detections: DetectionRow[];
   track?: LatLng[];
   areas?: LatLng[][];
+  waypoints?: LatLng[];
+  uav?: { position: LatLng; label: string };
   selectedId?: string | null;
   onBoundsChange?: (b: Bbox) => void;
   className?: string;
@@ -18,11 +20,20 @@ interface Props {
 
 const DEFAULT_CENTER: LatLng = [19.5047, -99.147];
 
-function extent(dets: DetectionRow[]): LatLngBoundsExpression | undefined {
-  if (dets.length === 0) return undefined;
-  const lats = dets.map((d) => d.latitude);
-  const lons = dets.map((d) => d.longitude);
+function extent(points: LatLng[]): LatLngBoundsExpression | undefined {
+  if (points.length === 0) return undefined;
+  const lats = points.map((p) => p[0]);
+  const lons = points.map((p) => p[1]);
   return [[Math.min(...lats), Math.min(...lons)], [Math.max(...lats), Math.max(...lons)]];
+}
+
+/** Mantiene el VANT dentro de la vista cuando se mueve. */
+function KeepInView({ position }: { position?: LatLng }) {
+  const map = useMap();
+  useEffect(() => {
+    if (position && !map.getBounds().contains(position)) map.panTo(position);
+  }, [position?.[0], position?.[1]]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
 }
 
 const readBounds = (map: LMap): Bbox => {
@@ -48,9 +59,14 @@ function FocusSelected({ detection, refs }: { detection?: DetectionRow; refs: Re
   return null;
 }
 
-export function DetectionMap({ detections, track, areas, selectedId, onBoundsChange, className = "h-[60vh]" }: Props) {
+export function DetectionMap({ detections, track, areas, waypoints, uav, selectedId, onBoundsChange, className = "h-[60vh]" }: Props) {
   const refs = useRef<Record<string, LCircleMarker | null>>({});
-  const bounds = extent(detections);
+  const rings = (areas ?? []).filter((r) => r.length >= 3);
+  const bounds = extent([
+    ...detections.map((d): LatLng => [d.latitude, d.longitude]),
+    ...rings.flat(),
+    ...(waypoints ?? []),
+  ]);
   const selected = selectedId ? detections.find((d) => d.id === selectedId) : undefined;
 
   return (
@@ -73,7 +89,7 @@ export function DetectionMap({ detections, track, areas, selectedId, onBoundsCha
           </LayersControl.BaseLayer>
           <LayersControl.Overlay checked name="Áreas de inspección">
             <LayerGroup>
-              {(areas ?? []).map((ring, i) => (
+              {rings.map((ring, i) => (
                 <Polygon key={i} positions={ring} pathOptions={{ color: "#1f6fb2", weight: 2, dashArray: "6 4", fillOpacity: 0.05 }} />
               ))}
             </LayerGroup>
@@ -81,6 +97,18 @@ export function DetectionMap({ detections, track, areas, selectedId, onBoundsCha
           <LayersControl.Overlay checked name="Trayectoria">
             <LayerGroup>{track && track.length > 1 && <Polyline positions={track} pathOptions={{ color: "#14262e", weight: 2, opacity: 0.7 }} />}</LayerGroup>
           </LayersControl.Overlay>
+          {waypoints && waypoints.length > 0 && (
+            <LayersControl.Overlay checked name="Waypoints planificados">
+              <LayerGroup>
+                {waypoints.length > 1 && <Polyline positions={waypoints} pathOptions={{ color: "#1f6fb2", weight: 1.5, dashArray: "2 6" }} />}
+                {waypoints.map((w, i) => (
+                  <CircleMarker key={i} center={w} radius={4} pathOptions={{ color: "#1f6fb2", weight: 2, fillColor: "#fff", fillOpacity: 1 }}>
+                    <Tooltip>Waypoint {i + 1}</Tooltip>
+                  </CircleMarker>
+                ))}
+              </LayerGroup>
+            </LayersControl.Overlay>
+          )}
           <LayersControl.Overlay checked name="Baches detectados">
             <LayerGroup>
               {detections.map((d) => {
@@ -114,6 +142,12 @@ export function DetectionMap({ detections, track, areas, selectedId, onBoundsCha
             </LayerGroup>
           </LayersControl.Overlay>
         </LayersControl>
+        {uav && (
+          <CircleMarker center={uav.position} radius={10} pathOptions={{ color: "#fff", weight: 3, fillColor: "#1f6fb2", fillOpacity: 1 }}>
+            <Tooltip permanent direction="top" offset={[0, -8]}>{uav.label}</Tooltip>
+          </CircleMarker>
+        )}
+        <KeepInView position={uav?.position} />
         {onBoundsChange && <BoundsReporter onChange={onBoundsChange} />}
         <FocusSelected detection={selected} refs={refs} />
       </MapContainer>

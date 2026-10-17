@@ -1,8 +1,8 @@
-# Plataforma web de Detección y georreferenciación de baches con VANT
+# Plataforma web · Detección y georreferenciación de baches con VANT (CDMX)
 
-Proyecto Terminal de Ingeniería en Telemática, UPIITA-IPN.
+Proyecto Terminal, Ingeniería en Telemática, UPIITA-IPN.
 
-## Estado actual (Fase 2 completa, Fase 3 en curso)
+## Estado actual (Fases 1 a 3 completas con datos de demostración)
 
 | Parte | Estado |
 |---|---|
@@ -11,21 +11,30 @@ Proyecto Terminal de Ingeniería en Telemática, UPIITA-IPN.
 | `GET /api/v1/health`, errores consistentes, CORS limitado | Hecho y probado |
 | Frontend: layout, navegación, estado de conexión, insignia de demostración | Hecho |
 | Frontend: panel, mapa Leaflet con filtros y capas, inventario con búsqueda/orden/paginación, detalle de bache | Hecho con **datos de demostración** (`frontend/src/services/demo`) |
-| Frontend: misiones, monitoreo de vuelo, historial | Pendiente (siguiente paso de la Fase 3) |
+| Frontend: misiones (crear, editar, detalle, zona y waypoints), monitoreo de vuelo con reproducción simulada, historial de inspecciones | Hecho con **datos de demostración** |
 | Autenticación y roles | Pendiente (Fase 4) |
 | Endpoints de misiones, detecciones, telemetría | Pendiente (Fase 4) |
 | WebSocket y simulador | Pendiente (Fase 5) |
 | Ortomosaicos | Pendiente (Fase 6) |
 
+Una misión solo se **registra** en la plataforma: no se envía al VANT ni existen comandos de vuelo. El monitoreo distingue datos recibidos, históricos y simulados; sin telemetría real no muestra valores inventados.
+
 Las rutas del frontend **no están protegidas todavía** porque no existe autenticación.
 
 Los datos de demostración son simulados y deterministas (coordenadas aproximadas en torno a la Unidad Profesional Adolfo López Mateos). Con `VITE_DEMO_MODE=false` la interfaz usa la fuente real, que aún no está implementada y lo indica con un mensaje explícito.
 
-## Ejecutar con Docker (solo dev)
+## Ejecutar con Docker (solo desarrollo)
 
 ```bash
 cp infra/.env.example infra/.env     # edita las contraseñas
 docker compose -f infra/docker-compose.yml --env-file infra/.env up --build
+```
+
+Si cambian las dependencias del frontend (`package.json`), recrea el volumen de módulos:
+
+```bash
+docker compose -f infra/docker-compose.yml --env-file infra/.env down
+docker compose -f infra/docker-compose.yml --env-file infra/.env up --build -V
 ```
 
 - Frontend: http://localhost:5173

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { AttentionTag, SeverityTag } from "../../components/Tags";
 import { DataState } from "../../components/DataState";
 import { DetectionFilters } from "../../components/DetectionFilters";
@@ -19,7 +19,10 @@ const COLUMNS: { key: SortField | null; label: string }[] = [
 ];
 
 export function DetectionsPage() {
-  const [query, setQuery] = useState<DetectionQuery>({ sortBy: "detected_at", sortDir: "desc", page: 1, pageSize: 10 });
+  const [params] = useSearchParams();
+  const [query, setQuery] = useState<DetectionQuery>({
+    sortBy: "detected_at", sortDir: "desc", page: 1, pageSize: 10, missionId: params.get("mission") ?? "",
+  });
   const missions = useMissions();
   const result = useDetections(query);
   const patch = (p: Partial<DetectionQuery>) => setQuery((q) => ({ ...q, ...p, page: 1 }));

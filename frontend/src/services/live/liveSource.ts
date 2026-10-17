@@ -9,6 +9,10 @@ const nope = (): never => {
 export const liveSource: DataSource = {
   name: "live",
   listMissions: async () => nope(),
+  getMission: async () => nope(),
+  createMission: async () => nope(),
+  updateMission: async () => nope(),
+  getTelemetry: async () => nope(),
   listDetections: async () => nope(),
   getDetection: async () => nope(),
   getTrack: async () => nope(),
